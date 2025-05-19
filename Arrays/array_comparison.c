@@ -4,7 +4,7 @@
 #include <math.h>
 #include <string.h>
 
-// Assembly function declarations
+//* Assembly function declarations
 extern long sumArray(long* arr, long size);
 extern long findMax(long* arr, long size);
 extern long findMin(long* arr, long size);
@@ -12,7 +12,7 @@ extern int isEmptyArray(long size);
 extern void reverseArray(long* arr, long size);
 extern void sortArray(long* arr, long size);
 
-// C implementations for comparison
+//* C implementations for comparison
 long c_sumArray(long* arr, long size) {
     long sum = 0;
     for (long i = 0; i < size; i++) {
@@ -58,7 +58,7 @@ void c_reverseArray(long* arr, long size) {
 }
 
 void c_sortArray(long* arr, long size) {
-    // Bubble sort
+    //* bubble sort
     for (long i = 0; i < size - 1; i++) {
         for (long j = 0; j < size - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
@@ -70,12 +70,12 @@ void c_sortArray(long* arr, long size) {
     }
 }
 
-// Function to measure execution time
+//* function to measure execution time
 double measure_time(void (*func)(), void* arg1, void* arg2) {
     clock_t start, end;
     start = clock();
     
-    // Call the function with appropriate arguments
+    //* Call the function with appropriate arguments
     if (arg2 == NULL) {
         ((long (*)(long))func)(*(long*)arg1);
     } else if (func == (void (*)())c_sumArray || func == (void (*)())sumArray ||
@@ -87,10 +87,10 @@ double measure_time(void (*func)(), void* arg1, void* arg2) {
     }
     
     end = clock();
-    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; // Convert to microseconds
+    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; //* convert to microseconds
 }
 
-// Function to print an array
+//* function to print an array
 void printArray(long* arr, long size) {
     printf("[");
     for (long i = 0; i < size; i++) {
@@ -100,7 +100,7 @@ void printArray(long* arr, long size) {
     printf("]");
 }
 
-// Function to generate a random array
+//* function to generate a random array
 long* generateRandomArray(long size, long min, long max) {
     long* arr = (long*)malloc(size * sizeof(long));
     for (long i = 0; i < size; i++) {
@@ -110,18 +110,19 @@ long* generateRandomArray(long size, long min, long max) {
 }
 
 int main() {
-    printf("===== Array Functions Comparison: C vs Assembly =====\n\n");
+    printf("=============================================================");
+    printf("===== array Functions Comparison: C vs Assembly =====\n\n");
     
-    // Seed random number generator
+    //* seed random number generator
     srand(time(NULL));
     
-    // Test arrays
+    //* test arrays
     long empty_array[] = {};
     long single_element[] = {42};
     long small_array[] = {5, 2, 9, 1, 7, 3};
     long* medium_array = generateRandomArray(50, 1, 1000);
     long* large_array = generateRandomArray(500, 1, 10000);
-    
+    //* a dictionary
     struct {
         long* arr;
         long size;
@@ -135,7 +136,7 @@ int main() {
     };
     int num_arrays = sizeof(test_arrays) / sizeof(test_arrays[0]);
     
-    // Test sumArray
+    //* test sumArray
     printf("1. Sum Array Function\n");
     printf("-------------------\n");
     for (int i = 0; i < num_arrays; i++) {
@@ -161,7 +162,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test findMax
+    //* test findMax
     printf("2. Find Max Function\n");
     printf("------------------\n");
     for (int i = 0; i < num_arrays; i++) {
@@ -187,7 +188,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test findMin
+    //* test findMin
     printf("3. Find Min Function\n");
     printf("------------------\n");
     for (int i = 0; i < num_arrays; i++) {
@@ -213,7 +214,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test isEmptyArray
+    //* test isEmptyArray
     printf("4. Is Empty Array Function\n");
     printf("------------------------\n");
     for (int i = 0; i < num_arrays; i++) {
@@ -233,7 +234,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test reverseArray
+    //* test reverseArray
     printf("5. Reverse Array Function\n");
     printf("-----------------------\n");
     for (int i = 0; i < num_arrays; i++) {
@@ -266,7 +267,7 @@ int main() {
             printf("\n");
         }
         
-        // Check if results match
+        //* check if results match
         int match = 1;
         for (long j = 0; j < size; j++) {
             if (c_arr[j] != asm_arr[j]) {
@@ -285,15 +286,15 @@ int main() {
         free(asm_arr);
     }
     
-    // Test sortArray
+    //* test sortArray
     printf("6. Sort Array Function\n");
     printf("--------------------\n");
     for (int i = 0; i < num_arrays; i++) {
-        if (test_arrays[i].size == 0) continue; // Skip empty array
+        if (test_arrays[i].size == 0) continue; //* skip empty array
         
         long size = test_arrays[i].size;
         
-        // Create copies of the array for C and ASM
+        //* create copies of the array for C and ASM
         long* c_arr = (long*)malloc(size * sizeof(long));
         long* asm_arr = (long*)malloc(size * sizeof(long));
         memcpy(c_arr, test_arrays[i].arr, size * sizeof(long));
@@ -318,7 +319,7 @@ int main() {
             printf("\n");
         }
         
-        // Check if results match
+        //* check if results match
         int match = 1;
         for (long j = 0; j < size; j++) {
             if (c_arr[j] != asm_arr[j]) {
@@ -339,7 +340,7 @@ int main() {
     
     printf("===== Array Functions Comparison Complete =====\n");
     
-    // Free dynamically allocated arrays
+    //* free dynamically allocated arrays
     free(medium_array);
     free(large_array);
     

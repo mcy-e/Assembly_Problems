@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <math.h>  // Added this line
+#include <math.h>  
 
-// Assembly function declarations
+//* Assembly function declarations
 extern int stringLength(const char* str);
 extern int isEmptyString(const char* str);
 extern void reverseString(char* str);
 extern void concatenateStrings(char* dest, const char* src);
 
-// C implementations for comparison
+//* C implementations for comparison
 int c_stringLength(const char* str) {
     int len = 0;
     while (str[len] != '\0') {
@@ -39,12 +39,12 @@ void c_concatenateStrings(char* dest, const char* src) {
     int i = 0;
     int j = 0;
     
-    // Find the end of dest
+    //* find the end of dest
     while (dest[i] != '\0') {
         i++;
     }
     
-    // Copy src to the end of dest
+    //* copy src to the end of dest
     while (src[j] != '\0') {
         dest[i++] = src[j++];
     }
@@ -52,12 +52,12 @@ void c_concatenateStrings(char* dest, const char* src) {
     dest[i] = '\0';
 }
 
-// Function to measure execution time
+//* function to measure time
 double measure_time(void (*func)(), void* arg1, void* arg2) {
     clock_t start, end;
     start = clock();
     
-    // Call the function with appropriate arguments
+    //* call the function with appropriate args
     if (arg2 == NULL) {
         ((void (*)(void*))func)(arg1);
     } else {
@@ -65,13 +65,14 @@ double measure_time(void (*func)(), void* arg1, void* arg2) {
     }
     
     end = clock();
-    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; // Convert to microseconds
+    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; //* xconvert to microseconds
 }
 
 int main() {
+    printf("============================================================");
     printf("===== String Functions Comparison: C vs Assembly =====\n\n");
     
-    // Test strings
+    //* test strings
     char* test_strings[] = {
         "",
         "Hello",
@@ -80,7 +81,7 @@ int main() {
     };
     int num_strings = sizeof(test_strings) / sizeof(test_strings[0]);
     
-    // Test stringLength
+    //* test stringLength
     printf("1. String Length Function\n");
     printf("------------------------\n");
     for (int i = 0; i < num_strings; i++) {
@@ -102,7 +103,7 @@ int main() {
         free(str);
     }
     
-    // Test isEmptyString
+    //* test isEmptyString
     printf("2. Is Empty String Function\n");
     printf("--------------------------\n");
     for (int i = 0; i < num_strings; i++) {
@@ -124,7 +125,7 @@ int main() {
         free(str);
     }
     
-    // Test reverseString
+    //* test reverseString
     printf("3. Reverse String Function\n");
     printf("-------------------------\n");
     for (int i = 0; i < num_strings; i++) {
@@ -146,13 +147,13 @@ int main() {
         free(asm_str);
     }
     
-    // Test concatenateStrings
+    //* test concatenateStrings
     printf("4. Concatenate Strings Function\n");
     printf("------------------------------\n");
     char* append_str = " - Appended Text";
     
     for (int i = 0; i < num_strings; i++) {
-        // Allocate enough space for concatenation
+        //* allocate enough space for concatenation
         char* c_str = (char*)malloc(strlen(test_strings[i]) + strlen(append_str) + 1);
         char* asm_str = (char*)malloc(strlen(test_strings[i]) + strlen(append_str) + 1);
         

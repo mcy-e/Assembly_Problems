@@ -34,27 +34,27 @@ ARRAYS_DIR = Arrays
 all: numbers strings arrays numbers_stk strings_stk arrays_stk
 is_prime:
 
-	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
-	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+	$(ASM) $(ASMFLAGS) -o Numbers/isPrime.o Numbers/isPrime.asm
+	$(LD) $(LDFLAGS) -o isPrime_exec Numbers/isPrime.o
 
 is_even:
-	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
-	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
-# --- String Tests ---
+	$(ASM) $(ASMFLAGS) -o Numbers/EvenOdd.o Numbers/EvenOdd.asm 
+	$(LD) $(LDFLAGS) -o EvenOdd_exec Numbers/EvenOdd.o
+
 string_length:
-	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
-	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+	$(ASM) $(ASMFLAGS) -o Strings/stringLength.o Strings/stringLength.asm
+	$(LD) $(LDFLAGS) -o strLen_exec Strings/stringLength.o
 
 is_empty_string:
 	$(ASM) $(ASMFLAGS) -o Strings/isEmptyString.o Strings/isEmptyString.asm
-	$(LD) $(LDFLAGS) -o numbers_exec Strings/isEmptyString.o
-# --- Array Tests ---
+	$(LD) $(LDFLAGS) -o isEmptyString_exec Strings/isEmptyString.o
+
 sum_array:
-	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
-	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+	$(ASM) $(ASMFLAGS) -o Arrays/sumArray.o Arrays/sumArray.asm
+	$(LD) $(LDFLAGS) -o sumArray_exec Arrays/sumArray.o
 is_empty_array:
-	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
-	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+	$(ASM) $(ASMFLAGS) -o Arrays/isEmptyArray.o Arrays/isEmptyArray.asm
+	$(LD) $(LDFLAGS) -o numbers_exec Arrays/isEmptyArray.o
 
 numbers: $(NUMBERS_SRC)
 	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)

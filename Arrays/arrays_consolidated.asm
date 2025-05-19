@@ -1,5 +1,3 @@
-; ===== Consolidated Array Operations in Assembly =====
-; This file contains all array-related assembly functions
 
 section .text
 global sumArray
@@ -9,60 +7,50 @@ global isEmptyArray
 global reverseArray
 global sortArray
 
-; ===== sumArray =====
-; Calculates the sum of elements in an array
-; Input: RDI - pointer to the array
-;        RSI - number of elements
-; Output: RAX - sum of elements
 sumArray:
     push rbp
     mov rbp, rsp
     
-    xor rax, rax        ; Initialize sum to 0
+    xor rax, rax        ; initialize sum to 0
     
-    test rsi, rsi       ; Check if array is empty
-    jz .done            ; If empty, we're done
+    test rsi, rsi       ; check if array is empty
+    jz .done            ; if empty we are done
     
-    xor rcx, rcx        ; Initialize counter to 0
+    xor rcx, rcx        ; initialize counter to 0
     
 .loop:
-    add rax, [rdi + rcx*8] ; Add current element to sum
-    inc rcx             ; Increment counter
-    cmp rcx, rsi        ; Check if we've processed all elements
-    jl .loop            ; If not, continue loop
+    add rax, [rdi + rcx*8]  ; add current element to sum
+    inc rcx                 ; increment counter
+    cmp rcx, rsi            ; check if we have processed all elements
+    jl .loop                ; if not continue loop
     
 .done:
     pop rbp
     ret
 
-; ===== findMax =====
-; Finds the maximum element in an array
-; Input: RDI - pointer to the array
-;        RSI - number of elements
-; Output: RAX - maximum element
 findMax:
     push rbp
     mov rbp, rsp
     
-    test rsi, rsi       ; Check if array is empty
-    jz .empty           ; If empty, return 0
+    test rsi, rsi       ; check if array is empty
+    jz .empty           ; if empty return 0
     
-    mov rax, [rdi]      ; Initialize max to first element
-    cmp rsi, 1          ; Check if array has only one element
-    je .done            ; If so, we're done
+    mov rax, [rdi]      ; initialize max to first element
+    cmp rsi, 1          ; check if array has only one element
+    je .done            ; if so  done
     
     mov rcx, 1          ; Start from second element
     
 .loop:
-    cmp [rdi + rcx*8], rax ; Compare current element with max
-    jle .continue       ; If less or equal, continue
+    cmp [rdi + rcx*8], rax ; compare current element with max
+    jle .continue       ; if less or equal continue
     
-    mov rax, [rdi + rcx*8] ; Update max
+    mov rax, [rdi + rcx*8] ; update max
     
 .continue:
-    inc rcx             ; Increment counter
-    cmp rcx, rsi        ; Check if we've processed all elements
-    jl .loop            ; If not, continue loop
+    inc rcx             ; increment counter
+    cmp rcx, rsi        ; check if we processed all elements
+    jl .loop            ; If not loop
     jmp .done
     
 .empty:
@@ -72,159 +60,141 @@ findMax:
     pop rbp
     ret
 
-; ===== findMin =====
-; Finds the minimum element in an array
-; Input: RDI - pointer to the array
-;        RSI - number of elements
-; Output: RAX - minimum element
 findMin:
     push rbp
     mov rbp, rsp
     
-    test rsi, rsi       ; Check if array is empty
-    jz .empty           ; If empty, return 0
+    test rsi, rsi       ; check if array is empty
+    jz .empty           ; if empty return 0
     
-    mov rax, [rdi]      ; Initialize min to first element
-    cmp rsi, 1          ; Check if array has only one element
-    je .done            ; If so, we're done
+    mov rax, [rdi]      ; initialize min to first element
+    cmp rsi, 1          ; check if array has only one element
+    je .done            ; if so we are done
     
-    mov rcx, 1          ; Start from second element
+    mov rcx, 1          ; start from second element
     
 .loop:
-    cmp [rdi + rcx*8], rax ; Compare current element with min
-    jge .continue       ; If greater or equal, continue
+    cmp [rdi + rcx*8], rax ; compare current element with min
+    jge .continue       ; if greater or equal continue
     
-    mov rax, [rdi + rcx*8] ; Update min
+    mov rax, [rdi + rcx*8] ; update min
     
 .continue:
-    inc rcx             ; Increment counter
-    cmp rcx, rsi        ; Check if we've processed all elements
-    jl .loop            ; If not, continue loop
+    inc rcx             ; increment counter
+    cmp rcx, rsi        ; check if we've processed all elements
+    jl .loop            ; if not, continue loop
     jmp .done
     
 .empty:
-    xor rax, rax        ; Return 0 for empty array
+    xor rax, rax        ; return 0 for empty array
     
 .done:
     pop rbp
     ret
 
-; ===== isEmptyArray =====
-; Checks if an array is empty
-; Input: RSI - number of elements
-; Output: RAX - 1 if empty, 0 if not empty
 isEmptyArray:
     push rbp
     mov rbp, rsp
     
-    test rsi, rsi       ; Check if number of elements is 0
-    jz .empty           ; If 0, array is empty
+    test rsi, rsi       ; check if number of elements is 0
+    jz .empty           ; if 0 array is empty
     
-    xor rax, rax        ; Not empty, return 0
+    xor rax, rax        ; Not empty return 0
     jmp .done
     
 .empty:
-    mov rax, 1          ; Empty, return 1
+    mov rax, 1          ; Empty return 1
     
 .done:
     pop rbp
     ret
 
-; ===== reverseArray =====
-; Reverses an array in-place
-; Input: RDI - pointer to the array
-;        RSI - number of elements
-; Output: None (array is modified in-place)
 reverseArray:
     push rbp
     mov rbp, rsp
-    push rbx            ; Save rbx
-    push r12            ; Save r12
-    push r13            ; Save r13
-    push r14            ; Save r14
+    push rbx            ; save rbx
+    push r12            ; save r12
+    push r13            ; save r13
+    push r14            ; save r14
     
-    mov rbx, rdi        ; Store array pointer in rbx
-    mov r12, rsi        ; Store number of elements in r12
+    mov rbx, rdi        ; store array pointer in rbx
+    mov r12, rsi        ; store number of elements in r12
     
-    test r12, r12       ; Check if array is empty
-    jz .done            ; If empty, we're done
+    test r12, r12       ; check if array is empty
+    jz .done            ; if empty we are done
     
-    xor r13, r13        ; r13 = first element index (0)
-    dec r12             ; r12 = last element index (n-1)
+    xor r13, r13        ; r13 => first elem 
+    dec r12             ; r12 => last elem  
     
 .loop:
-    cmp r13, r12        ; Check if we've processed all elements
-    jge .done           ; If so, we're done
+    cmp r13, r12        ; check if we have processed all elems
+    jge .done           ; if so we are done
     
-    ; Swap elements at r13 and r12
-    mov r14, [rbx + r13*8] ; r14 = first element
-    mov rax, [rbx + r12*8] ; rax = last element
-    mov [rbx + r13*8], rax ; first position = last element
-    mov [rbx + r12*8], r14 ; last position = first element
+    ; swap elements at r13 and r12
+    mov r14, [rbx + r13*8] ;    r14 => first elem
+    mov rax, [rbx + r12*8] ;    rax => last elem
+    mov [rbx + r13*8], rax ;    first pos => last elem
+    mov [rbx + r12*8], r14 ;    last pos => first elem
     
     inc r13             ; Move first index forward
     dec r12             ; Move last index backward
     jmp .loop           ; Continue loop
     
 .done:
-    pop r14             ; Restore r14
-    pop r13             ; Restore r13
-    pop r12             ; Restore r12
-    pop rbx             ; Restore rbx
+    pop r14             ; restore registers
+    pop r13             
+    pop r12             
+    pop rbx             
     pop rbp
     ret
 
-; ===== sortArray =====
-; Sorts an array in ascending order (bubble sort)
-; Input: RDI - pointer to the array
-;        RSI - number of elements
-; Output: None (array is modified in-place)
 sortArray:
     push rbp
-    mov rbp, rsp
-    push rbx            ; Save rbx
-    push r12            ; Save r12
-    push r13            ; Save r13
-    push r14            ; Save r14
+    mov rbp, rsp         ; save registers
+    push rbx            
+    push r12            
+    push r13            
+    push r14            
     
-    mov rbx, rdi        ; Store array pointer in rbx
-    mov r12, rsi        ; Store number of elements in r12
+    mov rbx, rdi        ; store array pointer in rbx
+    mov r12, rsi        ; store number of elements in r12
     
-    cmp r12, 1          ; Check if array has 0 or 1 element
-    jle .done           ; If so, it's already sorted
+    cmp r12, 1          ; check if array has 0 or 1 element
+    jle .done           ; if so it is  sorted
     
-    mov r13, 0          ; r13 = outer loop counter
+    mov r13, 0          ; r13 => outer loop counter (first for)
     
 .outer_loop:
-    mov r14, 0          ; r14 = inner loop counter
+    mov r14, 0          ; r14 => inner loop counter (second for)
     
 .inner_loop:
-    mov rax, [rbx + r14*8]       ; rax = current element
-    mov rdx, [rbx + r14*8 + 8]   ; rdx = next element
+    mov rax, [rbx + r14*8]       ; current elem
+    mov rdx, [rbx + r14*8 + 8]   ; next elem
     
-    cmp rax, rdx        ; Compare current and next elements
-    jle .continue       ; If current <= next, continue
+    cmp rax, rdx        ; compare current and next elems
+    jle .continue       ; if current <= next continue
     
-    ; Swap elements
+    ;swap elems
+    
     mov [rbx + r14*8], rdx       ; current position = next element
     mov [rbx + r14*8 + 8], rax   ; next position = current element
     
 .continue:
-    inc r14             ; Increment inner loop counter
-    mov rax, r12        ; rax = number of elements
-    sub rax, r13        ; rax = number of elements - outer loop counter
+    inc r14             ; increment inner loop counter
+    mov rax, r12        
+    sub rax, r13     
     dec rax             ; rax = number of elements - outer loop counter - 1
-    cmp r14, rax        ; Check if we've processed all elements in this pass
-    jl .inner_loop      ; If not, continue inner loop
+    cmp r14, rax        ; check if we processed all elems
+    jl .inner_loop      ; if not continue inner loop
     
     inc r13             ; Increment outer loop counter
     cmp r13, r12        ; Check if we've done enough passes
-    jl .outer_loop      ; If not, continue outer loop
+    jl .outer_loop      ; if not continue outer loop
     
 .done:
-    pop r14             ; Restore r14
-    pop r13             ; Restore r13
-    pop r12             ; Restore r12
-    pop rbx             ; Restore rbx
+    pop r14             ; restore registers
+    pop r13             
+    pop r12             
+    pop rbx             
     pop rbp
     ret

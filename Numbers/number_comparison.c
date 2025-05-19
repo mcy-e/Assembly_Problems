@@ -3,14 +3,14 @@
 #include <time.h>
 #include <math.h>
 
-// Assembly function declarations
+//* Assembly function declarations
 extern int isPrime(long num);
 extern int isEven(long num);
 extern long factorial(long num);
 extern long gcd(long a, long b);
 extern long fibonacci(long n);
 
-// C implementations for comparison
+//* C implementations for comparison
 int c_isPrime(long num) {
     if (num <= 1) return 0;
     if (num == 2) return 1;
@@ -62,12 +62,12 @@ long c_fibonacci(long n) {
     return b;
 }
 
-// Function to measure execution time
+//* function to measure execution time
 double measure_time(void (*func)(), void* arg1, void* arg2) {
     clock_t start, end;
     start = clock();
     
-    // Call the function with appropriate arguments
+    //* call the function with appropriate arguments
     if (arg2 == NULL) {
         ((long (*)(long))func)(*(long*)arg1);
     } else {
@@ -75,13 +75,15 @@ double measure_time(void (*func)(), void* arg1, void* arg2) {
     }
     
     end = clock();
-    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; // Convert to microseconds
+    return ((double) (end - start)) / CLOCKS_PER_SEC * 1000000; //* convert to microseconds mthimatical conversion
 }
 
 int main() {
+    
+    printf("==============================================================");
     printf("===== Number Functions Comparison: C vs Assembly =====\n\n");
     
-    // Test isPrime
+    //* test isPrime
     printf("1. Is Prime Function\n");
     printf("------------------\n");
     long prime_tests[] = {0, 1, 2, 3, 4, 7, 13, 17, 20, 97, 100, 9973};
@@ -104,7 +106,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test isEven
+    //* test isEven
     printf("2. Is Even Function\n");
     printf("------------------\n");
     long even_tests[] = {0, 1, 2, 3, 4, 7, 10, 15, 20, 99, 100};
@@ -127,7 +129,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test factorial
+    //* test factorial
     printf("3. Factorial Function\n");
     printf("--------------------\n");
     long factorial_tests[] = {0, 1, 2, 3, 4, 5, 10, 12};
@@ -150,7 +152,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test GCD
+    //* test GCD
     printf("4. GCD Function\n");
     printf("--------------\n");
     struct {
@@ -179,7 +181,7 @@ int main() {
                asm_time < c_time ? "faster" : "slower");
     }
     
-    // Test Fibonacci
+    //* test Fibonacci
     printf("5. Fibonacci Function\n");
     printf("--------------------\n");
     long fibonacci_tests[] = {0, 1, 2, 3, 5, 10, 15, 20, 25, 30};
