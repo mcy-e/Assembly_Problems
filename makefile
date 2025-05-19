@@ -27,7 +27,34 @@ BIN_DIR = bin
 STRINGS_DIR = Strings
 NUMBERS_DIR = Numbers
 ARRAYS_DIR = Arrays
+
+
+
+
 all: numbers strings arrays numbers_stk strings_stk arrays_stk
+is_prime:
+
+	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
+	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+
+is_even:
+	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
+	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+# --- String Tests ---
+string_length:
+	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
+	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+
+is_empty_string:
+	$(ASM) $(ASMFLAGS) -o Strings/isEmptyString.o Strings/isEmptyString.asm
+	$(LD) $(LDFLAGS) -o numbers_exec Strings/isEmptyString.o
+# --- Array Tests ---
+sum_array:
+	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
+	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
+is_empty_array:
+	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
+	$(LD) $(LDFLAGS) -o numbers_exec $(NUMBERS_OBJ)
 
 numbers: $(NUMBERS_SRC)
 	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)
@@ -174,4 +201,4 @@ run_comparison: comparison
 
 # Add to clean
 clean:
-	rm -f Numbers/*.o Strings/*.o Arrays/*.o numbers_exec strings_exec arrays_exec \numbers_debug strings_debug arrays_debug numbers_stk_exec strings_stk_exec arrays_stk_exec \numbers_stk_debug strings_stk_debug arrays_stk_debug 
+	rm -f Numbers/*.o Strings/*.o Arrays/*.o numbers_exec strings_exec arrays_exec \numbers_debug strings_debug arrays_debug numbers_stk_exec strings_stk_exec arrays_stk_exec \numbers_stk_debug strings_stk_debug arrays_stk_debug $(OBJ_DIR)/* $(BIN_DIR)/* 

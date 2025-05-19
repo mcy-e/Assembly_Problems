@@ -12,9 +12,6 @@ global concatenateStrings
 ; Input: RDI - pointer to the string
 ; Output: RAX - length of the string
 stringLength:
-    push rbp
-    mov rbp, rsp
-    
     xor rax, rax        ; Initialize counter to 0
     
 .loop:
@@ -24,7 +21,6 @@ stringLength:
     jmp .loop           ; Continue loop
     
 .done:
-    pop rbp
     ret
 
 ; ===== isEmptyString =====
@@ -32,79 +28,60 @@ stringLength:
 ; Input: RDI - pointer to the string
 ; Output: RAX - 1 if empty, 0 if not empty
 isEmptyString:
-    push rbp
-    mov rbp, rsp
-    
     cmp byte [rdi], 0   ; Check if first character is null terminator
-    je .empty           ; If null terminator, string is empty
-    
-    xor rax, rax        ; Not empty, return 0
-    jmp .done
-    
-.empty:
-    mov rax, 1          ; Empty, return 1
-    
-.done:
-    pop rbp
+    sete al             ; Set AL to 1 if equal (empty), 0 otherwise
+    movzx rax, al       ; Zero-extend AL to RAX
     ret
 
 ; ===== reverseString =====
 ; Reverses a string in-place
 ; Input: RDI - pointer to the string
 ; Output: None (string is modified in-place)
+; ===== reverseString (stack version) =====
+; Reverses a string in-place using a stack
+; Input: RDI - pointer to the string
+; Output: None (string is modified in-place)
 reverseString:
-    push rbp
-    mov rbp, rsp
-    push rbx            ; Save rbx
-    push r12            ; Save r12
-    push r13            ; Save r13
+    push rbx            ; Save callee-saved register
+    mov rbx, rdi        ; Save original string pointer
     
-    mov rbx, rdi        ; Store string pointer in rbx
+    ; First, push all characters onto the stack
+    xor rcx, rcx        ; RCX will be our length counter
+.push_loop:
+    mov al, [rdi]       ; Load current character
+    test al, al         ; Check for null terminator
+    jz .pop_loop_setup  ; If null, start popping
     
-    ; Calculate string length
-    call stringLength
-    mov r12, rax        ; r12 = string length
+    push rax            ; Push character onto stack (using full register)
+    inc rdi             ; Move to next character
+    inc rcx             ; Increment length counter
+    jmp .push_loop
     
-    test r12, r12       ; Check if string is empty
-    jz .done            ; If empty, we're done
+.pop_loop_setup:
+    mov rdi, rbx        ; Reset pointer to start of string
     
-    dec r12             ; r12 = last character index
-    xor r13, r13        ; r13 = first character index (0)
+.pop_loop:
+    test rcx, rcx       ; Check if we've processed all characters
+    jz .done            ; If counter is zero, we're done
     
-.loop:
-    cmp r13, r12        ; Check if we've processed all characters
-    jge .done           ; If so, we're done
-    
-    ; Swap characters at r13 and r12
-    mov al, [rbx + r13] ; al = first character
-    mov ah, [rbx + r12] ; ah = last character
-    mov [rbx + r13], ah ; first position = last character
-    mov [rbx + r12], al ; last position = first character
-    
-    inc r13             ; Move first index forward
-    dec r12             ; Move last index backward
-    jmp .loop           ; Continue loop
+    pop rax             ; Pop character from stack
+    mov [rdi], al       ; Store character back to string
+    inc rdi             ; Move to next position
+    dec rcx             ; Decrement counter
+    jmp .pop_loop
     
 .done:
-    pop r13             ; Restore r13
-    pop r12             ; Restore r12
-    pop rbx             ; Restore rbx
-    pop rbp
+    pop rbx             ; Restore callee-saved register
     ret
-
 ; ===== concatenateStrings =====
 ; Concatenates two strings
 ; Input: RDI - pointer to destination string (must have enough space)
 ;        RSI - pointer to source string
 ; Output: None (destination string is modified)
 concatenateStrings:
-    push rbp
-    mov rbp, rsp
-    push rbx            ; Save rbx
-    push r12            ; Save r12
+    push rbx            ; Save rbx (callee-saved)
     
     mov rbx, rdi        ; Store destination pointer in rbx
-    mov r12, rsi        ; Store source pointer in r12
     
     ; Find end of destination string
     call stringLength
@@ -112,18 +89,16 @@ concatenateStrings:
     
     ; Copy source string to the end of destination
 .loop:
-    mov al, [r12]       ; Load character from source
+    mov al, [rsi]       ; Load character from source
     mov [rbx], al       ; Store character to destination
     
     test al, al         ; Check if we copied the null terminator
     jz .done            ; If so, we're done
     
     inc rbx             ; Move destination pointer
-    inc r12             ; Move source pointer
+    inc rsi             ; Move source pointer
     jmp .loop           ; Continue loop
     
 .done:
-    pop r12             ; Restore r12
     pop rbx             ; Restore rbx
-    pop rbp
     ret

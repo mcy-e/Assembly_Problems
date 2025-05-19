@@ -2,45 +2,6 @@
 ; STRING !!
 ; test : Computes operand1 & operand2 (bitwise AND) and discard the result and updates the flags !
 
-section .text
-global isEmpty 
-
-; bool isEmpty(char* str)
-; Input: RDI = string pointer
-; Output: RAX = 1 if empty, 0 if not
-
-isEmpty :
-
-xor eax, eax        ; Clear return value (default to empty)
-    mov al, [rdi]       ; Load first character
-    test al, al         ; Check if it's null terminator
-    sete al             ; Set AL=1 if ZF set (empty), 0 otherwise
-    ret
-
-
-
-
- ; using stacks  
-section .text
-global isEmpty_stack
-
-; bool isEmpty_stack(char* str)
-; Input: [RSP+8] = string pointer
-; Output: RAX = 1 if empty, 0 if not
-isEmpty_stack:
-    push rbp
-    mov rbp, rsp
-    mov rdi, [rbp+16]   ; Get string pointer from stack
-    
-    xor eax, eax        ; Clear return value
-    mov al, [rdi]       ; Load first character
-    test al, al         ; Check for null terminator
-    sete al             ; Set return value
-    
-    pop rbp
-    ret
-
-
 
 section .data
     ; Test strings

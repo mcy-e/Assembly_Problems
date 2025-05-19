@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>  // Added this line
 
 // Assembly function declarations
 extern int stringLength(const char* str);
