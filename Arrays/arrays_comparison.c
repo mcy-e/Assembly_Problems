@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <cstdint>
 
 //* function declarations for assembly functions
 extern void toArray_asm(const char* input, int64_t* array, int* count);
