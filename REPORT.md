@@ -15,19 +15,25 @@ It demonstrates not only how high-level and low-level languages solve the same p
 ```
 Assembly_Problems/
 ├── Arrays/
-│   ├── array_comparison.c          # C vs ASM benchmarking for arrays
-│   ├── arrays_consolidated.asm     # ASM implementations (register/stack)
-│   └── arrays_stk_implem.asm       # Stack-based ASM for arrays
+│   ├── array_comparison.c
+│   ├── arrays_consolidated.asm
+│   ├── arrays.asm
+│   └── arrays_stk_implem.asm
 ├── Numbers/
-│   ├── number_comparison.c         # C vs ASM benchmarking for numbers
-│   └── ...                         # Additional number routines
+│   ├── number_comparison.c 
+│   ├── number_consolidated.asm
+│   ├── number_stk_implem.asm
+│   └── numbers.asm
 ├── Strings/
-│   ├── string_comparison.c         # C vs ASM benchmarking for strings
-│   ├── strings.asm                 # String routines in ASM
-│   └── strings_stk_implem.asm      # Stack-based string routines
-├── makefile                        # Automated builds, debug, benchmark
-└── README.md                       # Project overview
+│   ├── string_comparison.c
+│   ├── strings.asm
+│   ├── arrays_consolidated.asm
+│   └── strings_stk_implem.asm
+├── Makefile
+├── REPORT.md
+└── README.md
 ```
+
 
 - **Arrays, Numbers, Strings:** Each contains both C and ASM files + comparison drivers.
 - **makefile:** Automates building, cleaning, running, and debugging.
