@@ -7,7 +7,8 @@
     global isEven 
 
     
-; bool isEven(int num)
+
+;bool isEven(int num)
 ; Input: num in EDI (System V calling convention)
 ; Output: RAX = 1 if even, 0 if odd
 isEven : 
