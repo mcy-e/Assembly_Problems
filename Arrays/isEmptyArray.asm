@@ -30,9 +30,9 @@ section .text
 ; ---------------------------------------
 isArrayEmpty:
     xor rax, rax            ; Clear RAX = 0 (not empty by default)
-    test rdi, rdi           ; If array is null
+    cmp rdi,0           ; If array is null
     jz .empty
-    test rsi, rsi           ; If size == 0
+    cmp rsi, 0           ; If size == 0
     jz .empty
     ret
 .empty:
