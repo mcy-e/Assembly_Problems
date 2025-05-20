@@ -55,7 +55,7 @@ sum_array:
 	$(LD) $(LDFLAGS) -o sumArray_exec Arrays/sumArray.o
 is_empty_array:
 	$(ASM) $(ASMFLAGS) -o Arrays/isEmptyArray.o Arrays/isEmptyArray.asm
-	$(LD) $(LDFLAGS) -o numbers_exec Arrays/isEmptyArray.o
+	$(LD) $(LDFLAGS) -o isEmpty_exec Arrays/isEmptyArray.o
 
 numbers: $(NUMBERS_SRC)
 	$(ASM) $(ASMFLAGS) -o $(NUMBERS_OBJ) $(NUMBERS_SRC)

@@ -1,13 +1,7 @@
-; ======================================
-; NASM 64-bit Linux
-; stringLength: stack-based string length
-; Parameters: pushed on stack (char* str)
-; Returns: value pushed on stack (int)
-; ======================================
-
 section .data
     myStr db "Assembly is fun!", 0
     lenMsg db "Length: ", 0
+    newline db 10           ; Added for proper output formatting
 
 section .bss
     outbuf resb 16
@@ -17,28 +11,25 @@ section .text
 
 ; -------------------------------
 ; stringLength (stack-based)
-; input: [rbp + 16] = return address
-;        [rbp + 8]  = pointer to string
-; output: pushes length on stack
+; input: [rbp + 16] = pointer to string
+; output: rax = string length
 ; -------------------------------
 stringLength:
     push rbp
     mov rbp, rsp
 
     mov rsi, [rbp + 16]     ; get string pointer from stack
-
-    xor rcx, rcx            ; counter = 0
+    xor rax, rax            ; counter = 0 (using rax instead of rcx)
 
 .loop:
-    mov al, [rsi + rcx]     ; load byte
-    cmp al, 0
+    mov cl, [rsi + rax]     ; load byte
+    cmp cl, 0
     je .done
-    inc rcx
+    inc rax
     jmp .loop
 
 .done:
-    push rcx                ; return value on stack
-
+    mov rsp, rbp            ; restore stack pointer
     pop rbp
     ret
 
@@ -46,44 +37,63 @@ stringLength:
 ; _start (main)
 ; -------------------------------
 _start:
-    ; simulate call to stringLength(myStr) with stack
+    ; call stringLength(myStr)
     push myStr
     call stringLength
+    add rsp, 8              ; clean up stack (remove pushed argument)
 
-    ; result is on top of the stack
-    pop rax                ; rax = string length
+    ; rax now contains the string length
 
-    ; convert number to string for print
-    mov rsi, outbuf + 15
-    mov rcx, 10
-    mov rbx, rax
-    mov byte [rsi], 0
+    ; convert number to string for printing
+    mov rdi, outbuf + 15    ; point to end of buffer
+    mov byte [rdi], 0       ; null-terminate
+    mov rcx, 10             ; divisor for conversion
 
-.conv:
-    xor rdx, rdx
-    div rcx
-    add dl, '0'
-    dec rsi
-    mov [rsi], dl
-    mov rbx, rax
+    ; Handle case where length is 0
     test rax, rax
-    jnz .conv
+    jnz .convert
+    mov byte [outbuf + 14], '0'
+    mov rsi, outbuf + 14
+    jmp .print
 
+.convert:
+    mov rsi, rdi            ; remember start position
+    mov rbx, rax            ; save length
+
+.to_str:
+    dec rdi                 ; move backward in buffer
+    xor rdx, rdx            ; clear upper dividend
+    div rcx                 ; rax = quotient, rdx = remainder
+    add dl, '0'             ; convert to ASCII
+    mov [rdi], dl           ; store digit
+    test rax, rax           ; check if done
+    jnz .to_str
+
+    mov rsi, rdi            ; point to start of number string
+
+.print:
     ; print "Length: "
-    mov rax, 1
-    mov rdi, 1
+    mov rax, 1              ; sys_write
+    mov rdi, 1              ; stdout
+    mov rdx, 8              ; length of "Length: "
     mov rsi, lenMsg
-    mov rdx, 8
     syscall
 
     ; print number
+    mov rax, 1              ; sys_write
+    mov rdi, 1              ; stdout
+    mov rdx, outbuf + 15    ; calculate length
+    sub rdx, rsi            ; length = end - start
+    syscall
+
+    ; print newline
     mov rax, 1
     mov rdi, 1
-    mov rdx, outbuf + 15
-    sub rdx, rsi
+    mov rsi, newline
+    mov rdx, 1
     syscall
 
     ; exit
-    mov rax, 60
-    xor rdi, rdi
+    mov rax, 60             ; sys_exit
+    xor rdi, rdi            ; exit code 0
     syscall
