@@ -50,9 +50,6 @@ isPrime:
 ; ===============================
 ; Main Function (_start)
 ; ===============================
-_start:
-    mov rdi, 29         ; Number to check → Change it to test another number
-    call isPrime        ; Call isPrime(number)
 
 _start:
     mov rdi, 29         ; Number to check → Change it to test another number
