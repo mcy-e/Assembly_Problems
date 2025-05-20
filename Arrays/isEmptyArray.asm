@@ -1,35 +1,52 @@
 section .data
-    ; Test data
+    ; Arrays
     empty_array dd 0
     non_empty_array dd 1, 2, 3
+
+    ; Sizes
     size_empty dq 0
     size_non_empty dq 3
 
-    ; Output strings
-    msg_empty db "Array is empty", 10, 0
-    msg_not_empty db "Array is not empty", 10, 0
-    msg_test_empty db "Testing array of size 0", 10, 0
-    msg_test_non_empty db "Testing array of size 3", 10, 0
+    ; Messages
+    msg_empty db "Array is empty", 10
+    len_empty equ $ - msg_empty
+
+    msg_not_empty db "Array is not empty", 10
+    len_not_empty equ $ - msg_not_empty
+
+    msg_test_empty db "Testing array of size 0", 10
+    len_test_empty equ $ - msg_test_empty
+
+    msg_test_non_empty db "Testing array of size 3", 10
+    len_test_non_empty equ $ - msg_test_non_empty
 
 section .text
     global _start
 
+; ---------------------------------------
 ; bool isArrayEmpty(int arr[], int size)
-; Input: RDI = array pointer (unused), RSI = size
-; Output: RAX = 1 if empty (size == 0), 0 otherwise
+; Input: RDI = array pointer, RSI = size
+; Output: RAX = 1 if empty or null, else 0
+; ---------------------------------------
 isArrayEmpty:
-    xor eax, eax          ; Clear return value (default to false)
-    test rsi, rsi         ; Test size against itself (sets ZF if size == 0)
-    setz al               ; Set AL=1 if ZF is set (size == 0)
-    ret                   ; Return result in RAX (with upper bits cleared)
+    xor rax, rax            ; Clear RAX = 0 (not empty by default)
+    test rdi, rdi           ; If array is null
+    jz .empty
+    test rsi, rsi           ; If size == 0
+    jz .empty
+    ret
+.empty:
+    mov rax, 1
+    ret
 
-; Helper to print test case info
-; Uses syscall write(1, msg, len)
+; ---------------------------------------
+; Print test case messages
+; ---------------------------------------
 print_test_case_empty:
-    mov rax, 1            ; syscall: write
-    mov rdi, 1            ; fd: stdout
+    mov rax, 1              ; syscall: write
+    mov rdi, 1              ; stdout
     mov rsi, msg_test_empty
-    mov rdx, 24           ; length of string
+    mov rdx, len_test_empty
     syscall
     ret
 
@@ -37,47 +54,52 @@ print_test_case_non_empty:
     mov rax, 1
     mov rdi, 1
     mov rsi, msg_test_non_empty
-    mov rdx, 26
+    mov rdx, len_test_non_empty
     syscall
     ret
 
-; Helper to print result
+; ---------------------------------------
+; Print result (based on RAX)
+; ---------------------------------------
 print_result:
-    test al, al
-    jz .not_empty
+    cmp rax, 0
+    jne .empty_result       ; If RAX == 1, it's empty
 
-    ; Print empty message
-    mov rax, 1
-    mov rdi, 1
-    mov rsi, msg_empty
-    mov rdx, 17
-    syscall
-    ret
-
-.not_empty:
+    ; Not empty
     mov rax, 1
     mov rdi, 1
     mov rsi, msg_not_empty
-    mov rdx, 23
+    mov rdx, len_not_empty
     syscall
     ret
 
+.empty_result:
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, msg_empty
+    mov rdx, len_empty
+    syscall
+    ret
+
+; ---------------------------------------
+; Entry Point
+; ---------------------------------------
 _start:
     ; Test 1: Empty array
     mov rdi, empty_array
-    mov rsi, [size_empty]
+    mov rsi, [rel size_empty]
     call print_test_case_empty
     call isArrayEmpty
     call print_result
 
     ; Test 2: Non-empty array
     mov rdi, non_empty_array
-    mov rsi, [size_non_empty]
+    mov rsi, [rel size_non_empty]
     call print_test_case_non_empty
     call isArrayEmpty
     call print_result
 
     ; Exit
-    mov rax, 60         ; sys_exit
-    xor rdi, rdi        ; exit code 0
+    mov rax, 60             ; syscall: exit
+    xor rdi, rdi            ; exit code 0
     syscall
